@@ -31,3 +31,7 @@ body {
 		text-wrap: balance;
 	}
 }
+
+::selection {
+	background-color: rgba(255, 0, 0, 0.2);
+}
