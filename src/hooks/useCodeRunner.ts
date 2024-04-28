@@ -1,48 +1,50 @@
 import { IrohRunner } from '@/lib/iroh';
 import { IrohRuntimeEvent } from '@/types';
-import { useEffect } from 'react';
+import { MutableRefObject, useEffect } from 'react';
 
 interface UseCodeRunnerProps {
 	code: string;
-	textarea?: HTMLTextAreaElement;
+	editorRef?: MutableRefObject<any>;
 }
 
 type UseCodeRunnerReturn = [() => void];
 
 export const useCodeRunner = ({
 	code,
-	textarea,
+	editorRef,
 }: UseCodeRunnerProps): UseCodeRunnerReturn => {
 	const iroh = new IrohRunner(code);
 
 	const updateCodeSelection = (event: IrohRuntimeEvent) => {
-		if (!event) return;
+		if (!event || !editorRef) return;
 		const eventLocation = event.getLocation();
-		console.log('eventLocation', eventLocation);
-		console.log('textarea', textarea);
-		textarea!.focus();
-		textarea!.setSelectionRange(
-			eventLocation.start.column,
-			eventLocation.end.column
-		);
+		editorRef.current.setSelection({
+			startLineNumber: eventLocation.start.line,
+			startColumn: eventLocation.start.column + 1,
+			endLineNumber: eventLocation.end.line,
+			endColumn: eventLocation.end.column + 1,
+		});
 	};
 
 	const keyboardListener = (e: KeyboardEvent) => {
 		if (e.key === 'ArrowDown') {
 			const irohRuntimeEvent = iroh.getNext();
-			updateCodeSelection(irohRuntimeEvent);
+			console.log(
+				'irohRuntimeEvent',
+				irohRuntimeEvent.value,
+				irohRuntimeEvent.name,
+				irohRuntimeEvent.category
+			);
+			irohRuntimeEvent && updateCodeSelection(irohRuntimeEvent);
 		} else if (e.key === 'ArrowUp') {
 			const irohRuntimeEvent = iroh.getPrev();
-			updateCodeSelection(irohRuntimeEvent);
+			irohRuntimeEvent && updateCodeSelection(irohRuntimeEvent);
 		}
 	};
 
 	const runCode = () => {
 		eval(iroh.stage.script);
-		console.log(
-			iroh.getQueue().forEach((el) => console.log(el.getLocation()))
-		);
-		if (textarea) {
+		if (editorRef) {
 			window.addEventListener('keydown', keyboardListener);
 		}
 	};

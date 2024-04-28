@@ -1,15 +1,14 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import Script from 'next/script';
 
-import Editor from 'react-simple-code-editor';
 import hljs from 'highlight.js/lib/core';
 import javascript from 'highlight.js/lib/languages/javascript';
 
 import { useCodeRunner } from '@/hooks/useCodeRunner';
 
 import './editorTheme.css';
+import { Editor } from '@monaco-editor/react';
 
 hljs.registerLanguage('javascript', javascript);
 
@@ -17,41 +16,29 @@ interface CodeEditorProps {
 	className?: string;
 }
 
-let iroh;
-
 export const CodeEditor = ({ className }: CodeEditorProps) => {
-	const [code, setCode] = useState(
-		`function add(a, b) {
-			return a + b;
-		};
-		  
-		function main() {
-			let res = 0;
-			let ii = 0;
-			for (let ii = 0; ii < 3; ii++) {
-			  res += add(ii, 2);
-			};
-			return res;
-		};
-		  
-		main();`
+	const editorRef = useRef<any | null>(null);
+	const [code, setCode] = useState<string>(
+		`console.log(1);
+
+		setTimeout(function () {
+		  console.log(2);
+		}, 0);
+		
+		Promise.resolve()
+		  .then(function () {
+			console.log(3);
+		  })
+		  .then(function () {
+			console.log(4);
+		  });`
 	);
-	const [textarea, setTextarea] = useState<HTMLTextAreaElement>();
 
 	const handleStartEvalClick = () => {
 		runCode();
 	};
 
-	const [runCode] = useCodeRunner({ code, textarea });
-
-	useEffect(() => {
-		if (typeof window !== 'undefined' && !textarea) {
-			const textarea = document.querySelector(
-				'.npm__react-simple-code-editor__textarea'
-			) as HTMLTextAreaElement;
-			setTextarea(textarea);
-		}
-	}, []);
+	const [runCode] = useCodeRunner({ code, editorRef });
 
 	return (
 		<>
@@ -69,19 +56,28 @@ export const CodeEditor = ({ className }: CodeEditorProps) => {
 					</div>
 					<div className="h-[calc(100%_-_60px)] overflow-y-auto p-2.5">
 						<Editor
-							value={code}
-							onValueChange={(code) => setCode(code)}
-							highlight={(code) =>
-								hljs.highlight(code, { language: 'javascript' })
-									.value
-							}
-							padding={10}
-							style={{
-								fontFamily:
-									'"Fira code", "Fira Mono", monospace',
-								fontSize: 12,
+							height={600}
+							width={600}
+							onChange={(newValue) => setCode(newValue || '')}
+							defaultLanguage="javascript"
+							defaultValue={code}
+							theme="vs-dark"
+							options={{
+								language: 'javascript',
+								// lineNumbers: false,
+								roundedSelection: false,
+								scrollBeyondLastLine: false,
+								readOnly: false,
+								theme: 'vs-dark',
+								minimap: {
+									enabled: false,
+								},
+								glyphMargin: true,
 							}}
-						/>
+							onMount={(editor) => {
+								editorRef.current = editor;
+							}}
+						></Editor>
 					</div>
 				</div>
 			</div>
