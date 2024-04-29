@@ -54,3 +54,17 @@ body {
 		text-wrap: balance;
 	}
 }
+
+@layer components {
+	.absolute-center {
+		@apply absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2;
+	}
+
+	.light-scrollbar {
+		@apply scrollbar-thumb-rounded-full scrollbar-thin scrollbar-track-transparent scrollbar-thumb-gray-400;
+	}
+
+	.horizontal-center {
+		@apply absolute left-1/2 transform -translate-x-1/2;
+	}
+}
