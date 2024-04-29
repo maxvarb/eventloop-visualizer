@@ -1,1 +1,2 @@
-export { BlockWrapper } from './blockWrapper';
+export { MotionBlockWrapper, BlockWrapper } from './blockWrapper';
+export { Button } from './button';

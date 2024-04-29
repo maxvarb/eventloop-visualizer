@@ -10,6 +10,7 @@ import { useCodeRunner } from '@/hooks/useCodeRunner';
 import './editorStyles.css';
 import { Editor, useMonaco } from '@monaco-editor/react';
 import { cn } from '@/lib/utils';
+import { Button } from '../common';
 
 hljs.registerLanguage('javascript', javascript);
 
@@ -63,12 +64,27 @@ export const CodeEditor = ({ className }: CodeEditorProps) => {
 			>
 				<div className="h-10 bg-[rgb(231_231_231_/_6%)] relative">
 					<div className="flex items-center justify-center absolute -translate-y-2/4 left-2.5 top-2/4">
-						<div className="w-2.5 h-2.5 mx-[5px] my-0 rounded-[50px] bg-[#ff5656]"></div>
+						{/* <div className="w-2.5 h-2.5 mx-[5px] my-0 rounded-[50px] bg-[#ff5656]"></div>
 						<div className="w-2.5 h-2.5 mx-[5px] my-0 rounded-[50px] bg-[#ffbc6a]"></div>
 						<div
 							className="w-2.5 h-2.5 mx-[5px] my-0 rounded-[50px] bg-[#67f772]"
 							onClick={handleStartEvalClick}
-						></div>
+						></div> */}
+						<Button
+							variant="button-icon"
+							colorVariant="error"
+							className="mx-[5px]"
+						></Button>
+						<Button
+							variant="button-icon"
+							colorVariant="warning"
+							className="mx-[5px]"
+						></Button>
+						<Button
+							variant="button-icon"
+							colorVariant="success"
+							className="mx-[5px]"
+						></Button>
 					</div>
 				</div>
 				<div className="h-[calc(100%_-_60px)] overflow-y-auto px-2.5 py-1">
