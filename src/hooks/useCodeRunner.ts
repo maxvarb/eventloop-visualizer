@@ -1,6 +1,7 @@
+import { MutableRefObject, useEffect } from 'react';
+
 import { IrohRunner } from '@/lib/iroh';
 import { IrohRuntimeEvent } from '@/types';
-import { MutableRefObject, useEffect } from 'react';
 
 interface UseCodeRunnerProps {
 	code: string;
@@ -29,12 +30,6 @@ export const useCodeRunner = ({
 	const keyboardListener = (e: KeyboardEvent) => {
 		if (e.key === 'ArrowDown') {
 			const irohRuntimeEvent = iroh.getNext();
-			console.log(
-				'irohRuntimeEvent',
-				irohRuntimeEvent.value,
-				irohRuntimeEvent.name,
-				irohRuntimeEvent.category
-			);
 			irohRuntimeEvent && updateCodeSelection(irohRuntimeEvent);
 		} else if (e.key === 'ArrowUp') {
 			const irohRuntimeEvent = iroh.getPrev();
@@ -43,6 +38,7 @@ export const useCodeRunner = ({
 	};
 
 	const runCode = () => {
+		console.log('eval');
 		eval(iroh.stage.script);
 		if (editorRef) {
 			window.addEventListener('keydown', keyboardListener);

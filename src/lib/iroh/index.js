@@ -6,10 +6,14 @@ export class IrohRunner {
 	#index;
 
 	constructor(input) {
-		this.stage = new Iroh.Stage(input);
-		this.addStageListeners();
-		this.#queue = [];
-		this.#index = 0;
+		try {
+			this.stage = new Iroh.Stage(input);
+			this.addStageListeners();
+			this.#queue = [];
+			this.#index = 0;
+		} catch (e) {
+			console.log('Error', e);
+		}
 	}
 
 	getNext() {
