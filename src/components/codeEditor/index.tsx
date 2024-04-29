@@ -7,7 +7,7 @@ import javascript from 'highlight.js/lib/languages/javascript';
 
 import { useCodeRunner } from '@/hooks/useCodeRunner';
 
-import './editorTheme.css';
+import './editorStyles.css';
 import { Editor, useMonaco } from '@monaco-editor/react';
 import { cn } from '@/lib/utils';
 
@@ -57,7 +57,7 @@ export const CodeEditor = ({ className }: CodeEditorProps) => {
 		<>
 			<div
 				className={cn(
-					'relative bg-[#1a1e22] text-white w-[calc(100%_-_60px)] overflow-hidden rounded-md',
+					'w-full h-full relative bg-[#1a1e22] text-white overflow-hidden rounded-lg',
 					className
 				)}
 			>
@@ -76,7 +76,6 @@ export const CodeEditor = ({ className }: CodeEditorProps) => {
 						onChange={(newValue) => setCode(newValue || '')}
 						defaultLanguage="javascript"
 						defaultValue={code}
-						theme="onedark"
 						options={{
 							language: 'javascript',
 							lineNumbersMinChars: 0,
@@ -86,7 +85,7 @@ export const CodeEditor = ({ className }: CodeEditorProps) => {
 							minimap: {
 								enabled: false,
 							},
-							theme: 'onedark',
+							theme: 'monokai-bright',
 							hover: {
 								enabled: false,
 							},

@@ -6,6 +6,11 @@
 	--foreground-rgb: 0, 0, 0;
 	--background-start-rgb: 214, 219, 220;
 	--background-end-rgb: 255, 255, 255;
+	--vscode-editorCodeLens-fontSize: 22px;
+
+	/* ::selection {
+		background-color: rgba(255, 0, 0, 0);
+	} */
 }
 
 @media (prefers-color-scheme: dark) {
@@ -18,20 +23,34 @@
 
 body {
 	color: rgb(var(--foreground-rgb));
-	background: linear-gradient(
-			to bottom,
-			transparent,
-			rgb(var(--background-end-rgb))
-		)
-		rgb(var(--background-start-rgb));
+	background-image: linear-gradient(
+		85deg,
+		hsl(0deg 0% 0%) 0%,
+		hsl(230deg 30% 8%) 14%,
+		hsl(230deg 30% 11%) 20%,
+		hsl(230deg 30% 14%) 24%,
+		hsl(230deg 30% 16%) 29%,
+		hsl(230deg 30% 18%) 33%,
+		hsl(230deg 30% 20%) 36%,
+		hsl(230deg 29% 20%) 40%,
+		hsl(230deg 28% 20%) 43%,
+		hsl(230deg 27% 19%) 47%,
+		hsl(230deg 25% 19%) 50%,
+		hsl(230deg 24% 18%) 53%,
+		hsl(230deg 22% 18%) 57%,
+		hsl(230deg 20% 17%) 60%,
+		hsl(229deg 20% 16%) 64%,
+		hsl(230deg 19% 15%) 67%,
+		hsl(230deg 19% 13%) 71%,
+		hsl(230deg 19% 12%) 76%,
+		hsl(230deg 19% 9%) 80%,
+		hsl(232deg 18% 7%) 86%,
+		hsl(0deg 11% 2%) 100%
+	);
 }
 
 @layer utilities {
 	.text-balance {
 		text-wrap: balance;
 	}
-}
-
-::selection {
-	background-color: rgba(255, 0, 0, 0.2);
 }
