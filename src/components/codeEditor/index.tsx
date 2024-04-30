@@ -11,6 +11,8 @@ import { cn } from '@/lib/utils';
 
 import { Button, ConditionalIcon } from '../common';
 import './editorStyles.css';
+import { AnimatePresence } from 'framer-motion';
+import { RefreshIcon } from '../common/icons';
 
 hljs.registerLanguage('javascript', javascript);
 
@@ -75,29 +77,26 @@ export const CodeEditor = ({ className }: CodeEditorProps) => {
 			>
 				<div className="h-10 bg-[rgb(231_231_231_/_6%)] relative">
 					<div className="flex items-center justify-center absolute -translate-y-2/4 left-2.5 top-2/4">
+						{isPlay && (
+							<Button
+								variant="button-icon"
+								colorVariant="error"
+								className="mx-[5px]"
+								onClick={() => setIsPlay(!isPlay)}
+							>
+								<RefreshIcon className="w-4 h-4" />
+							</Button>
+						)}
 						<Button
 							variant="button-icon"
-							colorVariant="error"
-							className="mx-[5px]"
-							onClick={() => setIsPlay(!isPlay)}
-						>
-							<ConditionalIcon
-								isCondition={isPlay}
-								firstPath={REFRESH_ICON_PATH}
-								secondPath={STOP_ICON_PATH}
-								className="w-4 h-4"
-							/>
-						</Button>
-						<Button
-							variant="button-icon"
-							colorVariant={isPlay ? 'success' : 'warning'}
+							colorVariant={isPlay ? 'success' : 'error'}
 							className="mx-[5px]"
 							onClick={handleStartEvalClick}
 						>
 							<ConditionalIcon
 								isCondition={isPlay}
 								firstPath={PLAY_ICON_PATH}
-								secondPath={PAUSE_ICON_PATH}
+								secondPath={STOP_ICON_PATH}
 								className="w-4 h-4"
 							/>
 						</Button>
