@@ -17,11 +17,12 @@ interface ButtonProps extends ComponentPropsWithoutRef<'button'> {
 
 const BUTTON_COLORS: Record<ColorVariant, string> = {
 	success: 'bg-success',
-	warning: 'bg-transparent border-2 border-blue',
-	error: 'border-error border-2 bg-transparent',
+	warning: 'bg-warning',
+	error: 'bg-error',
 };
 
-const BASE_CLASSES = 'pointer text-sm box-border';
+const BASE_CLASSES =
+	'pointer text-sm box-border flex justify-center items-center transition-colors duration-500';
 const VARIANT_CLASSES: Record<string, string> = {
 	'button-icon': 'w-5 h-5 rounded-[50px]',
 };
@@ -46,6 +47,8 @@ export const Button = ({
 			whileTap={{ scale: 0.9 }}
 			transition={{ type: 'spring', stiffness: 400, damping: 17 }}
 			{...rest}
-		></motion.button>
+		>
+			{children}
+		</motion.button>
 	);
 };
