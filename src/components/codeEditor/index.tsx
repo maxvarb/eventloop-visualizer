@@ -82,7 +82,6 @@ export const CodeEditor = ({ className }: CodeEditorProps) => {
 								variant="button-icon"
 								colorVariant="error"
 								className="mx-[5px]"
-								onClick={() => setIsPlay(!isPlay)}
 							>
 								<RefreshIcon className="w-4 h-4" />
 							</Button>
