@@ -1,53 +1,51 @@
-import { ButtonHTMLAttributes, forwardRef, ReactNode, Ref } from 'react';
+'use client';
+
+import { ComponentPropsWithoutRef, ReactNode } from 'react';
+
+import { HTMLMotionProps, motion } from 'framer-motion';
 
 import { cn } from '@/lib/utils';
 
 type ColorVariant = 'success' | 'warning' | 'error';
 type ButtonVariant = 'button-icon';
 
-interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+interface ButtonProps extends ComponentPropsWithoutRef<'button'> {
 	variant: ButtonVariant;
 	colorVariant: ColorVariant;
 	children?: ReactNode;
 }
 
 const BUTTON_COLORS: Record<ColorVariant, string> = {
-	success: '#67f772',
-	warning: '#ffbc6a',
-	error: '#ff5656',
+	success: 'bg-success',
+	warning: 'bg-transparent border-2 border-blue',
+	error: 'border-error border-2 bg-transparent',
 };
 
-const BASE_CLASSES = 'pointer text-sm transition-all box-border duration-300';
+const BASE_CLASSES = 'pointer text-sm box-border';
 const VARIANT_CLASSES: Record<string, string> = {
-	'button-icon':
-		'w-2.5 h-2.5 rounded-[50px] active:scale-210 hover:scale-200 ',
+	'button-icon': 'w-5 h-5 rounded-[50px]',
 };
 
-export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-	(
-		{
-			variant,
-			colorVariant,
-			className,
-			children,
-			style,
-			name,
-			...rest
-		}: ButtonProps,
-		ref: Ref<HTMLButtonElement>
-	) => {
-		const buttonClasses = `${BASE_CLASSES} ${VARIANT_CLASSES[variant]} bg-[${BUTTON_COLORS[colorVariant]}]`;
+export const Button = ({
+	variant,
+	colorVariant,
+	className,
+	children,
+	style,
+	name,
+	...rest
+}: ButtonProps & HTMLMotionProps<'button'>) => {
+	const buttonClasses = `${BUTTON_COLORS[colorVariant]} ${BASE_CLASSES} ${VARIANT_CLASSES[variant]}`;
 
-		return (
-			<button
-				title={name}
-				ref={ref}
-				className={cn(buttonClasses, className)}
-				style={style}
-				{...rest}
-			></button>
-		);
-	}
-);
-
-Button.displayName = 'Button';
+	return (
+		<motion.button
+			title={name}
+			className={cn(buttonClasses, className)}
+			style={style}
+			whileHover={{ scale: 1.2, filter: 'brightness(1.2)' }}
+			whileTap={{ scale: 0.9 }}
+			transition={{ type: 'spring', stiffness: 400, damping: 17 }}
+			{...rest}
+		></motion.button>
+	);
+};

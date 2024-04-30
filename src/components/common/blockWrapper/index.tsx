@@ -44,7 +44,7 @@ export const BlockWrapper = forwardRef<HTMLDivElement, BlockWrapperProps>(
 				className={cn(
 					className,
 					!noPadding && 'p-2.5',
-					'relative rounded-lg bg-[#23292e] text-white shadow-[10px_10px_12px_0px_rgba(0,0,0,0.67)]'
+					'relative rounded-lg bg-primary text-white shadow-3xl'
 				)}
 				variants={variants}
 				initial="initial"
