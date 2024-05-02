@@ -7,10 +7,10 @@
 	--background-start-rgb: 214, 219, 220;
 	--background-end-rgb: 255, 255, 255;
 	--vscode-editorCodeLens-fontSize: 22px;
+}
 
-	/* ::selection {
-		background-color: rgba(255, 0, 0, 0);
-	} */
+*:focus-visible {
+	outline: none;
 }
 
 @media (prefers-color-scheme: dark) {

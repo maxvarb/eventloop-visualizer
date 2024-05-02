@@ -1,25 +1,23 @@
-import { MutableRefObject, useEffect } from 'react';
+import { useEffect } from 'react';
 
 import { IrohRunner } from '@/lib/iroh';
 import { IrohRuntimeEvent } from '@/types';
 
 interface UseCodeRunnerProps {
-	code: string;
-	editorRef?: MutableRefObject<any>;
+	editorRef?: any;
 }
 
-type UseCodeRunnerReturn = [() => void];
+type UseCodeRunnerReturn = [() => void, () => void];
 
 export const useCodeRunner = ({
-	code,
 	editorRef,
 }: UseCodeRunnerProps): UseCodeRunnerReturn => {
-	const iroh = new IrohRunner(code);
+	let iroh: IrohRunner | null = null;
 
 	const updateCodeSelection = (event: IrohRuntimeEvent) => {
 		if (!event || !editorRef) return;
 		const eventLocation = event.getLocation();
-		editorRef.current.setSelection({
+		editorRef.setSelection({
 			startLineNumber: eventLocation.start.line,
 			startColumn: eventLocation.start.column + 1,
 			endLineNumber: eventLocation.end.line,
@@ -28,6 +26,7 @@ export const useCodeRunner = ({
 	};
 
 	const keyboardListener = (e: KeyboardEvent) => {
+		if (!iroh) return;
 		if (e.key === 'ArrowDown') {
 			const irohRuntimeEvent = iroh.getNext();
 			irohRuntimeEvent && updateCodeSelection(irohRuntimeEvent);
@@ -38,15 +37,27 @@ export const useCodeRunner = ({
 	};
 
 	const runCode = () => {
+		iroh = new IrohRunner(editorRef.getValue());
 		eval(iroh.stage.script);
 		if (editorRef) {
-			window.addEventListener('keydown', keyboardListener);
+			document.addEventListener('keydown', keyboardListener);
 		}
 	};
 
-	useEffect(() => {
-		return () => window.removeEventListener('keydown', keyboardListener);
-	});
+	const resetRunner = () => {
+		document.removeEventListener('keydown', keyboardListener);
+		iroh = null;
+		editorRef?.setSelection({
+			startLineNumber: 0,
+			startColumn: 0,
+			endLineNumber: 0,
+			endColumn: 0,
+		});
+	};
 
-	return [runCode];
+	useEffect(() => {
+		return () => resetRunner();
+	}, []);
+
+	return [runCode, resetRunner];
 };

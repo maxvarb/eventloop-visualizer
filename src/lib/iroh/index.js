@@ -38,6 +38,7 @@ export class IrohRunner {
 
 	reset() {
 		this.#queue = [];
+		this.#index = 0;
 	}
 
 	getQueue() {
