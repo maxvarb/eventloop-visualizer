@@ -11,4 +11,5 @@ interface IrohRuntimeEventLocation {
 
 export interface IrohRuntimeEvent {
 	getLocation: () => IrohRuntimeEventLocation;
+	name: string;
 }

@@ -22,7 +22,12 @@ export interface State {
 	webApis: StateValue[];
 }
 
-export interface ActionPayload {
+interface ActionPayload {
 	type: keyof State;
+}
+
+export type PopEntryActionPayload = ActionPayload;
+
+export interface AddEntryActionPayload extends ActionPayload {
 	content: StateValue;
 }

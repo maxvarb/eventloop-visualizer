@@ -45,6 +45,10 @@ export class IrohRunner {
 		return this.#queue;
 	}
 
+	getCurrentIndex() {
+		return this.#index;
+	}
+
 	addStageListeners() {
 		// if
 		this.stage.addListener(Iroh.IF).on('enter', (e) => this.push(e));

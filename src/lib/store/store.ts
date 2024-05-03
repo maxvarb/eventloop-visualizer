@@ -1,5 +1,6 @@
-import { configureStore } from '@reduxjs/toolkit';
+import { configureStore, Tuple } from '@reduxjs/toolkit';
 import createSagaMiddleware from 'redux-saga';
+import logger from 'redux-logger';
 
 import rootSaga from './sagas';
 import observerReducer from './observerSlice';
@@ -9,8 +10,7 @@ const sagaMiddleware = createSagaMiddleware();
 export const makeStore = () => {
 	const store = configureStore({
 		reducer: observerReducer,
-		middleware: (getDefaultMiddleware) =>
-			getDefaultMiddleware().concat(sagaMiddleware),
+		middleware: () => new Tuple(sagaMiddleware, logger),
 	});
 	sagaMiddleware.run(rootSaga);
 	return store;

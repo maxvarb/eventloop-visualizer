@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 
 import { IrohRunner } from '@/lib/iroh';
 import { IrohRuntimeEvent } from '@/types';
+import { useAppDispatch } from '@/lib/store/hooks';
 
 interface UseCodeRunnerProps {
 	editorRef?: any;
@@ -9,9 +10,24 @@ interface UseCodeRunnerProps {
 
 type UseCodeRunnerReturn = [() => void, () => void];
 
+const DIRECTION_TO_ACTION = {
+	add: 'ADD_OBSERVER_ENTRY',
+	pop: 'POP_OBSERVER_ENTRY',
+};
+
+type EventNameToObserverEntryType = {
+	[key: string]: string;
+};
+
+const EVENT_NAME_TO_OBSERVER_ENTRY_TYPE: EventNameToObserverEntryType = {
+	log: 'console',
+};
+
 export const useCodeRunner = ({
 	editorRef,
 }: UseCodeRunnerProps): UseCodeRunnerReturn => {
+	const dispatch = useAppDispatch();
+
 	let iroh: IrohRunner | null = null;
 
 	const updateCodeSelection = (event: IrohRuntimeEvent) => {
@@ -29,15 +45,12 @@ export const useCodeRunner = ({
 		if (!iroh) return;
 		if (e.key === 'ArrowDown') {
 			const irohRuntimeEvent = iroh.getNext();
-			console.log(
-				irohRuntimeEvent.name,
-				irohRuntimeEvent.value,
-				irohRuntimeEvent.result
-			);
 			irohRuntimeEvent && updateCodeSelection(irohRuntimeEvent);
+			updateObserverState(irohRuntimeEvent, 'add');
 		} else if (e.key === 'ArrowUp') {
 			const irohRuntimeEvent = iroh.getPrev();
 			irohRuntimeEvent && updateCodeSelection(irohRuntimeEvent);
+			updateObserverState(irohRuntimeEvent, 'pop');
 		}
 	};
 
@@ -62,8 +75,30 @@ export const useCodeRunner = ({
 
 	const updateObserverState = (
 		runtimeEvent: IrohRuntimeEvent,
-		direction: 'forward' | 'backward'
-	) => {};
+		operation: 'add' | 'pop'
+	) => {
+		if (!iroh) return;
+		const type = DIRECTION_TO_ACTION[operation];
+		const payloadType =
+			EVENT_NAME_TO_OBSERVER_ENTRY_TYPE[runtimeEvent.name];
+		if (!payloadType) return;
+
+		const actionPayload =
+			operation === 'add'
+				? {
+						content: {
+							position: runtimeEvent.getLocation(),
+							textContent: 'hello world',
+							eventsQueueIndex: iroh.getCurrentIndex(),
+						},
+					}
+				: {};
+
+		dispatch({
+			type,
+			payload: { ...actionPayload, type: payloadType, operation },
+		});
+	};
 
 	useEffect(() => {
 		return () => resetRunner();
