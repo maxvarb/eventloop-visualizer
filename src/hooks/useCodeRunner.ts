@@ -29,6 +29,11 @@ export const useCodeRunner = ({
 		if (!iroh) return;
 		if (e.key === 'ArrowDown') {
 			const irohRuntimeEvent = iroh.getNext();
+			console.log(
+				irohRuntimeEvent.name,
+				irohRuntimeEvent.value,
+				irohRuntimeEvent.result
+			);
 			irohRuntimeEvent && updateCodeSelection(irohRuntimeEvent);
 		} else if (e.key === 'ArrowUp') {
 			const irohRuntimeEvent = iroh.getPrev();
@@ -54,6 +59,11 @@ export const useCodeRunner = ({
 			endColumn: 0,
 		});
 	};
+
+	const updateObserverState = (
+		runtimeEvent: IrohRuntimeEvent,
+		direction: 'forward' | 'backward'
+	) => {};
 
 	useEffect(() => {
 		return () => resetRunner();

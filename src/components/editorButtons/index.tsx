@@ -17,7 +17,6 @@ const STOP_ICON_PATH =
 	'M5.25 7.5A2.25 2.25 0 0 1 7.5 5.25h9a2.25 2.25 0 0 1 2.25 2.25v9a2.25 2.25 0 0 1-2.25 2.25h-9a2.25 2.25 0 0 1-2.25-2.25v-9Z';
 
 export const EditorButtons = ({ editorRef }: EditorButtonsProps) => {
-	console.log('rerender 1');
 	const [isExecuteMode, setIsExecuteMode] = useState(false);
 	const [runCode, resetRunner] = useCodeRunner({ editorRef });
 
