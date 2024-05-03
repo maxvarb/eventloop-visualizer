@@ -10,8 +10,7 @@ interface MonacoProps {
 	onEditorLoad: (editor: any) => void;
 }
 
-const CODE = `editorRef.getValue() 
-console.log(1);
+const CODE = `console.log(1);
 
 setTimeout(function () {
     console.log(2);

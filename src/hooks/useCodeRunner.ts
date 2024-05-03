@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import { IrohRunner } from '@/lib/iroh';
 import { IrohRuntimeEvent } from '@/types';
 import { useAppDispatch } from '@/lib/store/hooks';
+import { getSubstring } from '@/lib/utils';
 
 interface UseCodeRunnerProps {
 	editorRef?: any;
@@ -83,21 +84,31 @@ export const useCodeRunner = ({
 			EVENT_NAME_TO_OBSERVER_ENTRY_TYPE[runtimeEvent.name];
 		if (!payloadType) return;
 
-		const actionPayload =
-			operation === 'add'
-				? {
-						content: {
-							position: runtimeEvent.getLocation(),
-							textContent: 'hello world',
-							eventsQueueIndex: iroh.getCurrentIndex(),
-						},
-					}
-				: {};
+		const actionPayload = getActionEventPayload(runtimeEvent, operation);
 
 		dispatch({
 			type,
 			payload: { ...actionPayload, type: payloadType, operation },
 		});
+	};
+
+	const getActionEventPayload = (
+		runtimeEvent: IrohRuntimeEvent,
+		operation: 'add' | 'pop'
+	) => {
+		if (operation === 'pop') return {};
+		const res = {
+			content: {
+				position: runtimeEvent.getLocation(),
+				textContent: getSubstring(
+					editorRef.getValue(),
+					runtimeEvent.getLocation()
+				),
+				eventsQueueIndex: iroh!.getCurrentIndex(),
+			},
+		};
+
+		return res;
 	};
 
 	useEffect(() => {

@@ -1,4 +1,4 @@
-import { CodeEditor } from '@/components/';
+import { CodeEditor, ConsoleOutput } from '@/components/';
 import { BlockWrapper } from '@/components/common';
 
 export default function Home() {
@@ -33,7 +33,7 @@ export default function Home() {
 						className="col-span-2 row-span-2"
 						label="Console"
 					>
-						3
+						<ConsoleOutput />
 					</BlockWrapper>
 					<BlockWrapper
 						appearanceIndex={2}

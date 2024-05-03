@@ -1,4 +1,4 @@
-interface IrohRuntimeEventLocation {
+export interface IrohRuntimeEventLocation {
 	start: {
 		line: number;
 		column: number;
