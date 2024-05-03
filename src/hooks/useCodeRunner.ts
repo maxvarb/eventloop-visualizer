@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { IrohRunner } from '@/lib/iroh';
 import { IrohRuntimeEvent } from '@/types';
 import { useAppDispatch } from '@/lib/store/hooks';
-import { getSubstring } from '@/lib/utils';
+import { getSubstring, isEventConsoleLog } from '@/lib/utils';
 
 interface UseCodeRunnerProps {
 	editorRef?: any;
@@ -33,7 +33,7 @@ export const useCodeRunner = ({
 
 	const updateCodeSelection = (event: IrohRuntimeEvent) => {
 		if (!event || !editorRef) return;
-		const eventLocation = event.getLocation();
+		const eventLocation = event.data.getLocation();
 		editorRef.setSelection({
 			startLineNumber: eventLocation.start.line,
 			startColumn: eventLocation.start.column + 1,
@@ -45,11 +45,11 @@ export const useCodeRunner = ({
 	const keyboardListener = (e: KeyboardEvent) => {
 		if (!iroh) return;
 		if (e.key === 'ArrowDown') {
-			const irohRuntimeEvent = iroh.getNext();
+			const irohRuntimeEvent = iroh.getNextQueueElement();
 			irohRuntimeEvent && updateCodeSelection(irohRuntimeEvent);
 			updateObserverState(irohRuntimeEvent, 'add');
 		} else if (e.key === 'ArrowUp') {
-			const irohRuntimeEvent = iroh.getPrev();
+			const irohRuntimeEvent = iroh.getPrevQueueElement();
 			irohRuntimeEvent && updateCodeSelection(irohRuntimeEvent);
 			updateObserverState(irohRuntimeEvent, 'pop');
 		}
@@ -81,7 +81,7 @@ export const useCodeRunner = ({
 		if (!iroh) return;
 		const type = DIRECTION_TO_ACTION[operation];
 		const payloadType =
-			EVENT_NAME_TO_OBSERVER_ENTRY_TYPE[runtimeEvent.name];
+			EVENT_NAME_TO_OBSERVER_ENTRY_TYPE[runtimeEvent.data.name];
 		if (!payloadType) return;
 
 		const actionPayload = getActionEventPayload(runtimeEvent, operation);
@@ -99,12 +99,9 @@ export const useCodeRunner = ({
 		if (operation === 'pop') return {};
 		const res = {
 			content: {
-				position: runtimeEvent.getLocation(),
-				textContent: getSubstring(
-					editorRef.getValue(),
-					runtimeEvent.getLocation()
-				),
-				eventsQueueIndex: iroh!.getCurrentIndex(),
+				position: runtimeEvent.data.getLocation(),
+				textContent: runtimeEvent.textContent,
+				eventsQueueIndex: iroh!.getCurrentQueueElementIndex(),
 			},
 		};
 

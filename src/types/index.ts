@@ -9,7 +9,15 @@ export interface IrohRuntimeEventLocation {
 	};
 }
 
-export interface IrohRuntimeEvent {
+export interface IrohRuntimeEventData {
 	getLocation: () => IrohRuntimeEventLocation;
 	name: string;
+	object: any;
+	callee: string;
+	arguments: any[];
+}
+
+export interface IrohRuntimeEvent {
+	data: IrohRuntimeEventData;
+	textContent: string;
 }

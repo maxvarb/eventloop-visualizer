@@ -1,52 +1,56 @@
 import { Iroh } from 'public/thirdparty/iroh.js';
+import { getSubstring, isEventConsoleLog } from '../utils';
 
 export class IrohRunner {
-	#queue;
 	stage;
-	#index;
+	#input;
+
+	#queue = [];
+	#queueElementIndex = 0;
 
 	constructor(input) {
+		this.#input = input;
 		try {
 			this.stage = new Iroh.Stage(input);
 			this.addStageListeners();
-			this.#queue = [];
-			this.#index = 0;
 		} catch (e) {
 			console.log('Error', e);
 		}
 	}
 
-	getNext() {
-		return this.#index < this.#queue.length - 1
-			? this.#queue[this.#index++]
-			: this.#index === this.#queue.length - 1
-				? this.#queue[this.#index]
+	getNextQueueElement() {
+		return this.#queueElementIndex < this.#queue.length - 1
+			? this.#queue[this.#queueElementIndex++]
+			: this.#queueElementIndex === this.#queue.length - 1
+				? this.#queue[this.#queueElementIndex]
 				: null;
 	}
 
-	getPrev() {
-		return this.#index > 0
-			? this.#queue[this.#index--]
-			: this.#index === 0
-				? this.#queue[this.#index]
+	getPrevQueueElement() {
+		return this.#queueElementIndex > 0
+			? this.#queue[this.#queueElementIndex--]
+			: this.#queueElementIndex === 0
+				? this.#queue[this.#queueElementIndex]
 				: null;
 	}
 
-	push(e) {
-		this.#queue.push(e);
+	push(e, eventContent) {
+		const textContent =
+			eventContent || getSubstring(this.#input, e.getLocation());
+		this.#queue.push({ data: e, textContent });
 	}
 
 	reset() {
 		this.#queue = [];
-		this.#index = 0;
+		this.#queueElementIndex = 0;
 	}
 
 	getQueue() {
 		return this.#queue;
 	}
 
-	getCurrentIndex() {
-		return this.#index;
+	getCurrentQueueElementIndex() {
+		return this.#queueElementIndex;
 	}
 
 	addStageListeners() {
@@ -77,7 +81,13 @@ export class IrohRunner {
 		// .on('leave', (e) => this.push(e));
 
 		// function call
-		this.stage.addListener(Iroh.CALL).on('before', (e) => this.push(e));
+		this.stage.addListener(Iroh.CALL).on('before', (e) => {
+			if (isEventConsoleLog(e)) {
+				this.push(e, e.arguments);
+			} else {
+				this.push(e);
+			}
+		});
 		// .on('after', (e) => this.push(e));
 
 		// function
