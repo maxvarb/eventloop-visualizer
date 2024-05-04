@@ -52,7 +52,9 @@ export const BlockWrapper = forwardRef<HTMLDivElement, BlockWrapperProps>(
 				custom={appearanceIndex}
 			>
 				{label && <BlockLabel label={label} />}
-				{children}
+				<div className="w-full h-full overflow-y-auto scrollbar-thumb-rounded-full scrollbar-thin scrollbar-track-transparent scrollbar-thumb-gray-400">
+					{children}
+				</div>
 			</motion.div>
 		);
 	}

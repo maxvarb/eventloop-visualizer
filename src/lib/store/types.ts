@@ -10,9 +10,9 @@ export interface EventSourcePosition {
 }
 
 export interface StateValue {
-	position?: EventSourcePosition;
-	textContent?: string;
-	eventsQueueIndex?: number;
+	position: EventSourcePosition;
+	textContent: string[];
+	eventsQueueIndex: number;
 }
 
 export interface State {
@@ -22,12 +22,7 @@ export interface State {
 	webApis: StateValue[];
 }
 
-interface ActionPayload {
+export interface ActionPayload {
 	type: keyof State;
-}
-
-export type PopEntryActionPayload = ActionPayload;
-
-export interface AddEntryActionPayload extends ActionPayload {
-	content: StateValue;
+	content?: StateValue;
 }

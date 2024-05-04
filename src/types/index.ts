@@ -19,5 +19,5 @@ export interface IrohRuntimeEventData {
 
 export interface IrohRuntimeEvent {
 	data: IrohRuntimeEventData;
-	textContent: string;
+	textContent: string[];
 }

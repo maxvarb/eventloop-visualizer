@@ -91,8 +91,8 @@ export const useCodeRunner = ({
 	const getActionEventPayload = (
 		runtimeEvent: IrohRuntimeEvent,
 		operation: 'add' | 'pop'
-	): { content: StateValue } => {
-		if (operation === 'pop') return { content: {} };
+	): { content: StateValue } | null => {
+		if (operation === 'pop') return null;
 		const res = {
 			content: {
 				position: runtimeEvent.data.getLocation(),

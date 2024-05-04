@@ -1,6 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-
-import { AddEntryActionPayload, PopEntryActionPayload, State } from './types';
+import { ActionPayload, State } from './types';
 
 const initialState: State = {
 	console: [],
@@ -13,11 +12,11 @@ const observerSlice = createSlice({
 	name: 'observer',
 	initialState: initialState,
 	reducers: {
-		addEntry: (state, action: PayloadAction<AddEntryActionPayload>) => {
+		addEntry: (state, action: PayloadAction<Required<ActionPayload>>) => {
 			const { type, content } = action.payload;
 			state[type].push(content);
 		},
-		popEntry: (state, action: PayloadAction<PopEntryActionPayload>) => {
+		popEntry: (state, action: PayloadAction<ActionPayload>) => {
 			const { type } = action.payload;
 			state[type].pop();
 		},
