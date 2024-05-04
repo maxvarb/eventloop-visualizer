@@ -10,9 +10,9 @@ export interface EventSourcePosition {
 }
 
 export interface StateValue {
-	position: EventSourcePosition;
-	textContent: string;
-	eventsQueueIndex: number;
+	position?: EventSourcePosition;
+	textContent?: string;
+	eventsQueueIndex?: number;
 }
 
 export interface State {

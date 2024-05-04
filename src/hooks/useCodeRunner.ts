@@ -3,7 +3,8 @@ import { useEffect } from 'react';
 import { IrohRunner } from '@/lib/iroh';
 import { IrohRuntimeEvent } from '@/types';
 import { useAppDispatch } from '@/lib/store/hooks';
-import { getSubstring, isEventConsoleLog } from '@/lib/utils';
+import { mutateObserver } from '@/lib/store/sagas';
+import { State, StateValue } from '@/lib/store/types';
 
 interface UseCodeRunnerProps {
 	editorRef?: any;
@@ -11,13 +12,8 @@ interface UseCodeRunnerProps {
 
 type UseCodeRunnerReturn = [() => void, () => void];
 
-const DIRECTION_TO_ACTION = {
-	add: 'ADD_OBSERVER_ENTRY',
-	pop: 'POP_OBSERVER_ENTRY',
-};
-
 type EventNameToObserverEntryType = {
-	[key: string]: string;
+	[key: string]: keyof State;
 };
 
 const EVENT_NAME_TO_OBSERVER_ENTRY_TYPE: EventNameToObserverEntryType = {
@@ -78,25 +74,25 @@ export const useCodeRunner = ({
 		runtimeEvent: IrohRuntimeEvent,
 		operation: 'add' | 'pop'
 	) => {
-		if (!iroh) return;
-		const type = DIRECTION_TO_ACTION[operation];
 		const payloadType =
 			EVENT_NAME_TO_OBSERVER_ENTRY_TYPE[runtimeEvent.data.name];
 		if (!payloadType) return;
 
 		const actionPayload = getActionEventPayload(runtimeEvent, operation);
-
-		dispatch({
-			type,
-			payload: { ...actionPayload, type: payloadType, operation },
-		});
+		dispatch(
+			mutateObserver({
+				...actionPayload,
+				type: payloadType,
+				operation,
+			})
+		);
 	};
 
 	const getActionEventPayload = (
 		runtimeEvent: IrohRuntimeEvent,
 		operation: 'add' | 'pop'
-	) => {
-		if (operation === 'pop') return {};
+	): { content: StateValue } => {
+		if (operation === 'pop') return { content: {} };
 		const res = {
 			content: {
 				position: runtimeEvent.data.getLocation(),
