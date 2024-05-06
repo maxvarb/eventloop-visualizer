@@ -4,8 +4,8 @@ interface ConsoleOutputLineProps {
 
 export const ConsoleOutputLine = ({ textContent }: ConsoleOutputLineProps) => {
 	return (
-		<div className="w-full py-1">
+		<code className="w-full py-1">
 			{`>>`} {textContent}
-		</div>
+		</code>
 	);
 };

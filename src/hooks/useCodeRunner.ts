@@ -16,6 +16,15 @@ type EventNameToObserverEntryType = {
 	[key: string]: keyof State;
 };
 
+type Operation = 'add' | 'pop';
+
+interface IrohProps {
+	[key: string]: {
+		getElement: () => IrohRuntimeEvent;
+		operationName: Operation;
+	};
+}
+
 const EVENT_NAME_TO_OBSERVER_ENTRY_TYPE: EventNameToObserverEntryType = {
 	log: 'console',
 };
@@ -26,6 +35,17 @@ export const useCodeRunner = ({
 	const dispatch = useAppDispatch();
 
 	let iroh: IrohRunner | null = null;
+
+	const KEYBOARD_KEY_TO_IROH_PROPS: IrohProps = {
+		ArrowUp: {
+			getElement: () => iroh?.getPrevQueueElement(),
+			operationName: 'pop',
+		},
+		ArrowDown: {
+			getElement: () => iroh?.getNextQueueElement(),
+			operationName: 'add',
+		},
+	};
 
 	const updateCodeSelection = (event: IrohRuntimeEvent) => {
 		if (!event || !editorRef) return;
@@ -40,14 +60,15 @@ export const useCodeRunner = ({
 
 	const keyboardListener = (e: KeyboardEvent) => {
 		if (!iroh) return;
-		if (e.key === 'ArrowDown') {
-			const irohRuntimeEvent = iroh.getNextQueueElement();
-			irohRuntimeEvent && updateCodeSelection(irohRuntimeEvent);
-			updateObserverState(irohRuntimeEvent, 'add');
-		} else if (e.key === 'ArrowUp') {
-			const irohRuntimeEvent = iroh.getPrevQueueElement();
-			irohRuntimeEvent && updateCodeSelection(irohRuntimeEvent);
-			updateObserverState(irohRuntimeEvent, 'pop');
+		const key = e.key;
+		const irohProps = KEYBOARD_KEY_TO_IROH_PROPS[key];
+		const irohRuntimeEvent = irohProps.getElement();
+		console.log('irohRuntimeEvent', irohRuntimeEvent);
+		if (irohRuntimeEvent) {
+			updateCodeSelection(irohRuntimeEvent);
+			updateObserverState(irohRuntimeEvent, irohProps.operationName);
+		} else {
+			console.log('execution completed');
 		}
 	};
 
@@ -72,7 +93,7 @@ export const useCodeRunner = ({
 
 	const updateObserverState = (
 		runtimeEvent: IrohRuntimeEvent,
-		operation: 'add' | 'pop'
+		operation: Operation
 	) => {
 		const payloadType =
 			EVENT_NAME_TO_OBSERVER_ENTRY_TYPE[runtimeEvent.data.name];
@@ -90,7 +111,7 @@ export const useCodeRunner = ({
 
 	const getActionEventPayload = (
 		runtimeEvent: IrohRuntimeEvent,
-		operation: 'add' | 'pop'
+		operation: Operation
 	): { content: StateValue } | null => {
 		if (operation === 'pop') return null;
 		const res = {

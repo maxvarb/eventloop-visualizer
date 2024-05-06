@@ -6,7 +6,7 @@ export class IrohRunner {
 	#input;
 
 	#queue = [];
-	#queueElementIndex = 0;
+	#queueElementIndex = -1;
 
 	constructor(input) {
 		this.#input = input;
@@ -19,19 +19,17 @@ export class IrohRunner {
 	}
 
 	getNextQueueElement() {
-		return this.#queueElementIndex < this.#queue.length - 1
-			? this.#queue[this.#queueElementIndex++]
-			: this.#queueElementIndex === this.#queue.length - 1
-				? this.#queue[this.#queueElementIndex]
-				: null;
+		this.#queueElementIndex++;
+		return this.#queueElementIndex < this.#queue.length
+			? this.#queue[this.#queueElementIndex]
+			: null;
 	}
 
 	getPrevQueueElement() {
-		return this.#queueElementIndex > 0
-			? this.#queue[this.#queueElementIndex--]
-			: this.#queueElementIndex === 0
-				? this.#queue[this.#queueElementIndex]
-				: null;
+		this.#queueElementIndex--;
+		return this.#queueElementIndex >= 0
+			? this.#queue[this.#queueElementIndex]
+			: null;
 	}
 
 	push(e, eventContent) {
@@ -42,7 +40,7 @@ export class IrohRunner {
 
 	reset() {
 		this.#queue = [];
-		this.#queueElementIndex = 0;
+		this.#queueElementIndex = -1;
 	}
 
 	getQueue() {
