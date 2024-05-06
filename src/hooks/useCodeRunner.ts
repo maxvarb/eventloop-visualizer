@@ -62,8 +62,8 @@ export const useCodeRunner = ({
 		if (!iroh) return;
 		const key = e.key;
 		const irohProps = KEYBOARD_KEY_TO_IROH_PROPS[key];
+		if (!irohProps) return;
 		const irohRuntimeEvent = irohProps.getElement();
-		console.log('irohRuntimeEvent', irohRuntimeEvent);
 		if (irohRuntimeEvent) {
 			updateCodeSelection(irohRuntimeEvent);
 			updateObserverState(irohRuntimeEvent, irohProps.operationName);

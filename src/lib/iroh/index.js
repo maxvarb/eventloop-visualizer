@@ -1,4 +1,5 @@
 import { Iroh } from 'public/thirdparty/iroh.js';
+
 import { getSubstring, isEventConsoleLog } from '../utils';
 
 export class IrohRunner {
@@ -19,17 +20,21 @@ export class IrohRunner {
 	}
 
 	getNextQueueElement() {
-		this.#queueElementIndex++;
-		return this.#queueElementIndex < this.#queue.length
-			? this.#queue[this.#queueElementIndex]
-			: null;
+		if (this.#queueElementIndex < this.#queue.length - 1) {
+			this.#queueElementIndex++;
+			return this.#queue[this.#queueElementIndex];
+		}
+		this.#queueElementIndex = this.#queue.length;
+		return null;
 	}
 
 	getPrevQueueElement() {
-		this.#queueElementIndex--;
-		return this.#queueElementIndex >= 0
-			? this.#queue[this.#queueElementIndex]
-			: null;
+		if (this.#queueElementIndex > 0) {
+			this.#queueElementIndex--;
+			return this.#queue[this.#queueElementIndex];
+		}
+		this.#queueElementIndex = -1;
+		return null;
 	}
 
 	push(e, eventContent) {

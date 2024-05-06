@@ -6,7 +6,6 @@ import { useMemo } from 'react';
 
 export const ConsoleOutput = () => {
 	const consoleState = useAppSelector((store) => store.console);
-	console.log(consoleState);
 
 	const logs = useMemo(() => {
 		return consoleState.map((state) => state.textContent?.join(' '));

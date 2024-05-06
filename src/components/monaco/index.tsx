@@ -22,7 +22,13 @@ Promise.resolve()
     })
     .then(function () {
         console.log(4);
-    });`;
+    });
+
+const myPromise = new Promise(function(resolve, reject) {
+	setTimeout(function() {
+		resolve("foo");
+	}, 300);
+});`;
 
 export const Monaco = ({ onEditorLoad }: MonacoProps) => {
 	const monaco = useMonaco();
