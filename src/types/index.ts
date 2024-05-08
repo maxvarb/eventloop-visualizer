@@ -1,4 +1,4 @@
-import { State } from '@/lib/store/types';
+import { State, StateKey } from '@/lib/store/types';
 
 export interface IrohRuntimeEventLocation {
 	start: {
@@ -29,7 +29,7 @@ export interface IrohRuntimeEvent {
 
 export interface Step {
 	id: string;
-	initiator: keyof State;
+	initiator: StateKey;
 	action: 'push' | 'pop' | 'remove';
 	textContent?: string | number;
 	delayAfter: number;

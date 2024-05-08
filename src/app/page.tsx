@@ -1,5 +1,5 @@
 import { CodeEditor, ConsoleOutput } from '@/components/';
-import { BlockWrapper } from '@/components/common';
+import { BlockWrapper, EventsPanel } from '@/components/common';
 
 export default function Home() {
 	return (
@@ -19,7 +19,7 @@ export default function Home() {
 						className="col-span-2 row-span-3"
 						label="Call Stack"
 					>
-						1
+						<EventsPanel entityName="callStack"></EventsPanel>
 					</BlockWrapper>
 					<BlockWrapper
 						appearanceIndex={1}

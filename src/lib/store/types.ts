@@ -22,6 +22,8 @@ export interface State {
 	callStack: StateValue[];
 }
 
+export type StateKey = keyof State;
+
 export interface BaseActionPayload {
 	type: keyof State;
 }

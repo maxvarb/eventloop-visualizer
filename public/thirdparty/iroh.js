@@ -7838,6 +7838,7 @@ export const Iroh = (function () {
 		});
 		patcher.walk(node.body, patcher, patcher.stage);
 		patcher.popScope();
+		console.log('patcher', patcher);
 	};
 
 	STAGE1.CallExpression = function (node, patcher) {
@@ -10014,6 +10015,9 @@ export const Iroh = (function () {
 		this.indent += INDENT_FACTOR;
 		// evaluate function bully protected
 		try {
+			console.log('before.object', before.object);
+			console.log('before.arguments', before.arguments);
+			console.log('before.call', before.call);
 			value = before.call.apply(before.object, before.arguments);
 		} catch (e) {
 			var tryFrame = this.resolveTryFrame(this.frame, true);
