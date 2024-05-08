@@ -10,9 +10,8 @@ export interface EventSourcePosition {
 }
 
 export interface StateValue {
-	position: EventSourcePosition;
-	textContent: string[];
-	eventsQueueIndex: number;
+	textContent: string;
+	id: number;
 }
 
 export interface State {
@@ -20,9 +19,21 @@ export interface State {
 	microtasks: StateValue[];
 	macrotasks: StateValue[];
 	webApis: StateValue[];
+	callStack: StateValue[];
 }
 
-export interface ActionPayload {
+export interface BaseActionPayload {
 	type: keyof State;
-	content?: StateValue;
 }
+
+export interface PushEntryActionPayload extends BaseActionPayload {
+	content: StateValue;
+}
+
+export type PopEntryActionPayload = BaseActionPayload;
+
+export interface RemoveEntryActionPayload extends BaseActionPayload {
+	id: number;
+}
+
+export type StoreMutationOperation = 'push' | 'pop' | 'remove';

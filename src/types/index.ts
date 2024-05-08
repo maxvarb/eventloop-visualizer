@@ -1,3 +1,5 @@
+import { State } from '@/lib/store/types';
+
 export interface IrohRuntimeEventLocation {
 	start: {
 		line: number;
@@ -15,9 +17,20 @@ export interface IrohRuntimeEventData {
 	object: any;
 	callee: string;
 	arguments: any[];
+	type: number;
+	category: number;
 }
 
 export interface IrohRuntimeEvent {
 	data: IrohRuntimeEventData;
-	textContent: string[];
+	textContent: string;
+	isIgnored: boolean;
+}
+
+export interface Step {
+	id: string;
+	initiator: keyof State;
+	action: 'push' | 'pop' | 'remove';
+	textContent?: string | number;
+	delayAfter: number;
 }

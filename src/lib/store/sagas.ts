@@ -1,24 +1,29 @@
 import { all, put, takeLatest } from 'redux-saga/effects';
 import { createAction, PayloadAction } from '@reduxjs/toolkit';
 
-import { addEntry, popEntry } from './observerSlice';
-import { ActionPayload } from './types';
+import {
+	PopEntryActionPayload,
+	PushEntryActionPayload,
+	RemoveEntryActionPayload,
+	StoreMutationOperation,
+} from './types';
+import { popEntry, pushEntry, removeEntry } from './observerSlice';
 
-const OPERATION_NAME_TO_ACTION = {
-	add: addEntry,
-	pop: popEntry,
-};
-
-export type MutateObserverAction = ActionPayload & {
-	operation: keyof typeof OPERATION_NAME_TO_ACTION;
-};
+type MutateObserverAction = (
+	| PushEntryActionPayload
+	| PopEntryActionPayload
+	| RemoveEntryActionPayload
+) & { operation: StoreMutationOperation };
 
 function* mutateObserverQueue(action: PayloadAction<MutateObserverAction>) {
-	const { payload } = action;
-	if (payload.operation === 'add') {
-		yield put(addEntry({ ...payload } as Required<ActionPayload>));
+	const operation = action.payload.operation;
+	const payload: unknown = action.payload;
+	if (operation === 'push') {
+		yield put(pushEntry({ ...(payload as PushEntryActionPayload) }));
+	} else if (operation === 'pop') {
+		yield put(popEntry({ ...(payload as PopEntryActionPayload) }));
 	} else {
-		yield put(popEntry({ ...payload }));
+		yield put(removeEntry({ ...(payload as RemoveEntryActionPayload) }));
 	}
 }
 

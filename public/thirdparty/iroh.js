@@ -46,80 +46,81 @@ export const Iroh = (function () {
 	var CATEGORY = {};
 
 	(function () {
+		// types
 		var ii = 0;
-		INSTR.PROGRAM = ii++;
+		INSTR.PROGRAM = ii++; // 0
 
-		INSTR.FUNCTION_RETURN = ii++;
-		INSTR.FUNCTION_CALL = ii++;
-		INSTR.FUNCTION_CALL_END = ii++;
-		INSTR.FUNCTION_ENTER = ii++;
-		INSTR.FUNCTION_LEAVE = ii++;
+		INSTR.FUNCTION_RETURN = ii++; // 1
+		INSTR.FUNCTION_CALL = ii++; // 2
+		INSTR.FUNCTION_CALL_END = ii++; // 3
+		INSTR.FUNCTION_ENTER = ii++; // 4
+		INSTR.FUNCTION_LEAVE = ii++; // 5
 
-		INSTR.LOOP_TEST = ii++;
-		INSTR.LOOP_ENTER = ii++;
-		INSTR.LOOP_LEAVE = ii++;
+		INSTR.LOOP_TEST = ii++; // 6
+		INSTR.LOOP_ENTER = ii++; // 7
+		INSTR.LOOP_LEAVE = ii++; // 8
 
-		INSTR.BREAK = ii++;
-		INSTR.CONTINUE = ii++;
+		INSTR.BREAK = ii++; // 9
+		INSTR.CONTINUE = ii++; // 10
 
-		INSTR.SWITCH_TEST = ii++;
-		INSTR.SWITCH_ENTER = ii++;
-		INSTR.SWITCH_LEAVE = ii++;
+		INSTR.SWITCH_TEST = ii++; // 11
+		INSTR.SWITCH_ENTER = ii++; // 12
+		INSTR.SWITCH_LEAVE = ii++; // 13
 
-		INSTR.CASE_TEST = ii++;
-		INSTR.CASE_ENTER = ii++;
-		INSTR.CASE_LEAVE = ii++;
+		INSTR.CASE_TEST = ii++; // 14
+		INSTR.CASE_ENTER = ii++; // 15
+		INSTR.CASE_LEAVE = ii++; // 16
 
-		INSTR.IF_TEST = ii++;
-		INSTR.IF_ENTER = ii++;
-		INSTR.IF_LEAVE = ii++;
+		INSTR.IF_TEST = ii++; // 17
+		INSTR.IF_ENTER = ii++; // 18
+		INSTR.IF_LEAVE = ii++; // 19
 
-		INSTR.ELSE_ENTER = ii++;
-		INSTR.ELSE_LEAVE = ii++;
+		INSTR.ELSE_ENTER = ii++; // 20
+		INSTR.ELSE_LEAVE = ii++; // 21
 
-		INSTR.VAR_INIT = ii++;
-		INSTR.VAR_DECLARE = ii++;
+		INSTR.VAR_INIT = ii++; // 22
+		INSTR.VAR_DECLARE = ii++; // 23
 
-		INSTR.OP_NEW = ii++;
-		INSTR.OP_NEW_END = ii++;
+		INSTR.OP_NEW = ii++; // 24
+		INSTR.OP_NEW_END = ii++; // 25
 
-		INSTR.UNARY = ii++;
-		INSTR.UPDATE = ii++;
+		INSTR.UNARY = ii++; // 26
+		INSTR.UPDATE = ii++; // 27
 
-		INSTR.SUPER = ii++;
+		INSTR.SUPER = ii++; // 28
 
-		INSTR.THIS = ii++;
+		INSTR.THIS = ii++; // 29
 
-		INSTR.LITERAL = ii++;
-		INSTR.IDENTIFIER = ii++;
+		INSTR.LITERAL = ii++; // 30
+		INSTR.IDENTIFIER = ii++; // 31
 
-		INSTR.BINARY = ii++;
-		INSTR.LOGICAL = ii++;
-		INSTR.TERNARY = ii++;
-		INSTR.ASSIGN = ii++;
+		INSTR.BINARY = ii++; // 32
+		INSTR.LOGICAL = ii++; // 33
+		INSTR.TERNARY = ii++; // 34
+		INSTR.ASSIGN = ii++; // 35
 
-		INSTR.METHOD_ENTER = ii++;
-		INSTR.METHOD_LEAVE = ii++;
+		INSTR.METHOD_ENTER = ii++; // 36
+		INSTR.METHOD_LEAVE = ii++; // 37
 
-		INSTR.TRY_ENTER = ii++;
-		INSTR.TRY_LEAVE = ii++;
+		INSTR.TRY_ENTER = ii++; // 38
+		INSTR.TRY_LEAVE = ii++; // 39
 
-		INSTR.CATCH_ENTER = ii++;
-		INSTR.CATCH_LEAVE = ii++;
+		INSTR.CATCH_ENTER = ii++; // 40
+		INSTR.CATCH_LEAVE = ii++; // 41
 
-		INSTR.FINAL_ENTER = ii++;
-		INSTR.FINAL_LEAVE = ii++;
+		INSTR.FINAL_ENTER = ii++; // 42
+		INSTR.FINAL_LEAVE = ii++; // 43
 
-		INSTR.ALLOC = ii++;
+		INSTR.ALLOC = ii++; // 44
 
-		INSTR.MEMBER_EXPR = ii++;
+		INSTR.MEMBER_EXPR = ii++; // 45
 
-		INSTR.BLOCK_ENTER = ii++;
-		INSTR.BLOCK_LEAVE = ii++;
+		INSTR.BLOCK_ENTER = ii++; // 46
+		INSTR.BLOCK_LEAVE = ii++; // 47
 
-		INSTR.PROGRAM_FRAME_VALUE = ii++;
-		INSTR.PROGRAM_ENTER = ii++;
-		INSTR.PROGRAM_LEAVE = ii++;
+		INSTR.PROGRAM_FRAME_VALUE = ii++; // 48
+		INSTR.PROGRAM_ENTER = ii++; // 49
+		INSTR.PROGRAM_LEAVE = ii++; // 50
 	})();
 
 	(function () {

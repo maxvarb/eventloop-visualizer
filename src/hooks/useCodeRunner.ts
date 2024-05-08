@@ -2,9 +2,9 @@ import { useEffect } from 'react';
 
 import { IrohRunner } from '@/lib/iroh';
 import { IrohRuntimeEvent } from '@/types';
-import { useAppDispatch } from '@/lib/store/hooks';
-import { mutateObserver } from '@/lib/store/sagas';
-import { State, StateValue } from '@/lib/store/types';
+import { resetEditorSelection, setEditorSelection } from '@/lib/utils';
+
+import { useStepper } from './useStepper';
 
 interface UseCodeRunnerProps {
 	editorRef?: any;
@@ -12,64 +12,54 @@ interface UseCodeRunnerProps {
 
 type UseCodeRunnerReturn = [() => void, () => void];
 
-type EventNameToObserverEntryType = {
-	[key: string]: keyof State;
-};
-
-type Operation = 'add' | 'pop';
-
 interface IrohProps {
-	[key: string]: {
-		getElement: () => IrohRuntimeEvent;
-		operationName: Operation;
-	};
+	[key: string]: () => IrohRuntimeEvent;
 }
-
-const EVENT_NAME_TO_OBSERVER_ENTRY_TYPE: EventNameToObserverEntryType = {
-	log: 'console',
-};
 
 export const useCodeRunner = ({
 	editorRef,
 }: UseCodeRunnerProps): UseCodeRunnerReturn => {
-	const dispatch = useAppDispatch();
+	const [executeRuntimeEvents] = useStepper();
 
 	let iroh: IrohRunner | null = null;
 
-	const KEYBOARD_KEY_TO_IROH_PROPS: IrohProps = {
-		ArrowUp: {
-			getElement: () => iroh?.getPrevQueueElement(),
-			operationName: 'pop',
-		},
-		ArrowDown: {
-			getElement: () => iroh?.getNextQueueElement(),
-			operationName: 'add',
-		},
+	const KEYBOARD_KEY_TO_GET_QUEUE_ELEMENT: IrohProps = {
+		ArrowUp: () => iroh?.getPrevQueueElement(),
+		ArrowDown: () => iroh?.getNextQueueElement(),
 	};
 
 	const updateCodeSelection = (event: IrohRuntimeEvent) => {
 		if (!event || !editorRef) return;
 		const eventLocation = event.data.getLocation();
-		editorRef.setSelection({
-			startLineNumber: eventLocation.start.line,
-			startColumn: eventLocation.start.column + 1,
-			endLineNumber: eventLocation.end.line,
-			endColumn: eventLocation.end.column + 1,
-		});
+		setEditorSelection(editorRef, eventLocation);
 	};
 
 	const keyboardListener = (e: KeyboardEvent) => {
 		if (!iroh) return;
-		const key = e.key;
-		const irohProps = KEYBOARD_KEY_TO_IROH_PROPS[key];
-		if (!irohProps) return;
-		const irohRuntimeEvent = irohProps.getElement();
-		if (irohRuntimeEvent) {
-			updateCodeSelection(irohRuntimeEvent);
-			updateObserverState(irohRuntimeEvent, irohProps.operationName);
+		const queue = getIrohQueue(e.key);
+		if (queue === null) return;
+
+		const visibleRuntimeEvent = queue[queue.length - 1];
+		if (visibleRuntimeEvent) {
+			updateCodeSelection(visibleRuntimeEvent);
+			executeRuntimeEvents(queue);
 		} else {
 			console.log('execution completed');
 		}
+	};
+
+	const getIrohQueue = (key: string) => {
+		const getNextElement = KEYBOARD_KEY_TO_GET_QUEUE_ELEMENT[key];
+		if (!getNextElement) return null;
+
+		const elementsQueue = [];
+		let irohRuntimeEvent = getNextElement();
+		while (irohRuntimeEvent?.isIgnored) {
+			elementsQueue.push(irohRuntimeEvent);
+			irohRuntimeEvent = getNextElement();
+		}
+
+		return [...elementsQueue, irohRuntimeEvent];
 	};
 
 	const runCode = () => {
@@ -83,46 +73,7 @@ export const useCodeRunner = ({
 	const resetRunner = () => {
 		document.removeEventListener('keydown', keyboardListener);
 		iroh = null;
-		editorRef?.setSelection({
-			startLineNumber: 0,
-			startColumn: 0,
-			endLineNumber: 0,
-			endColumn: 0,
-		});
-	};
-
-	const updateObserverState = (
-		runtimeEvent: IrohRuntimeEvent,
-		operation: Operation
-	) => {
-		const payloadType =
-			EVENT_NAME_TO_OBSERVER_ENTRY_TYPE[runtimeEvent.data.name];
-		if (!payloadType) return;
-
-		const actionPayload = getActionEventPayload(runtimeEvent, operation);
-		dispatch(
-			mutateObserver({
-				...actionPayload,
-				type: payloadType,
-				operation,
-			})
-		);
-	};
-
-	const getActionEventPayload = (
-		runtimeEvent: IrohRuntimeEvent,
-		operation: Operation
-	): { content: StateValue } | null => {
-		if (operation === 'pop') return null;
-		const res = {
-			content: {
-				position: runtimeEvent.data.getLocation(),
-				textContent: runtimeEvent.textContent,
-				eventsQueueIndex: iroh!.getCurrentQueueElementIndex(),
-			},
-		};
-
-		return res;
+		resetEditorSelection(editorRef);
 	};
 
 	useEffect(() => {

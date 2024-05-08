@@ -8,7 +8,7 @@ export const ConsoleOutput = () => {
 	const consoleState = useAppSelector((store) => store.console);
 
 	const logs = useMemo(() => {
-		return consoleState.map((state) => state.textContent?.join(' '));
+		return consoleState.map((state) => state.textContent);
 	}, [consoleState]);
 
 	return (
