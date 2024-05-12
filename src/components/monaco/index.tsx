@@ -10,25 +10,32 @@ interface MonacoProps {
 	onEditorLoad: (editor: any) => void;
 }
 
-const CODE = `console.log(1);
+// const CODE = `console.log(1);
 
-setTimeout(function () {
-    console.log(2);
-}, 0);
+// setTimeout(function () {
+//     console.log(2);
+// }, 0);
 
-Promise.resolve()
-    .then(function () {
-        console.log(3);
-    })
-    .then(function () {
-        console.log(4);
-    });
+// Promise.resolve()
+//     .then(function () {
+//         console.log(3);
+//     })
+//     .then(function () {
+//         console.log(4);
+//     });
 
-const myPromise = new Promise(function(resolve, reject) {
-	setTimeout(function() {
-		resolve("foo");
-	}, 300);
-});`;
+// const myPromise = new Promise(function(resolve, reject) {
+// 	setTimeout(function() {
+// 		resolve("foo");
+// 	}, 300);
+// });`;
+
+const CODE = `const a = 5;
+console.log(23);
+function abc() {
+   console.log(321)
+}
+abc()`;
 
 export const Monaco = ({ onEditorLoad }: MonacoProps) => {
 	const monaco = useMonaco();

@@ -19,7 +19,10 @@ export default function Home() {
 						className="col-span-2 row-span-3"
 						label="Call Stack"
 					>
-						<EventsPanel entityName="callStack"></EventsPanel>
+						<EventsPanel
+							entityName="callStack"
+							className="flex-col-reverse"
+						></EventsPanel>
 					</BlockWrapper>
 					<BlockWrapper
 						appearanceIndex={1}
@@ -40,7 +43,10 @@ export default function Home() {
 						className="col-span-4 row-span-1"
 						label="Microtasks Queue"
 					>
-						4
+						<EventsPanel
+							entityName="microtasks"
+							className="flex-row"
+						></EventsPanel>
 					</BlockWrapper>
 					<BlockWrapper
 						appearanceIndex={2}

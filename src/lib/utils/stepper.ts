@@ -1,18 +1,14 @@
 import { v4 as uuid } from 'uuid';
 
-import { isEventConsoleLog } from './iroh';
+import { isEventConsoleLog, isEventStaticPromiseMethod } from './iroh';
 
 import { IrohRuntimeEvent, Step } from '@/types';
 
 export const createEventSteps = (events: IrohRuntimeEvent[]) => {
 	const steps: Step[] = [];
 	for (const event of events) {
-		console.log(
-			'event',
-			event.data.type,
-			event.data.object,
-			event.data.name
-		);
+		console.log('event', event);
+		console.log('location', event.data.getLocation());
 		switch (event.data.type) {
 			case 2: {
 				// function call
@@ -32,18 +28,39 @@ export const createEventSteps = (events: IrohRuntimeEvent[]) => {
 						delayAfter: 0,
 					});
 				}
+
+				break;
 			}
-			case 3: // function return
+			case 3: {
+				// function return
 				steps.push({
 					id: uuid(),
 					initiator: 'callStack',
 					action: 'pop',
 					delayAfter: 2000,
 				});
+				break;
+			}
+
+			case 24: {
+				// OP_NEW
+				if (isEventStaticPromiseMethod(event.data)) {
+					steps.push({
+						id: uuid(),
+						initiator: 'microtasks',
+						action: 'push',
+						delayAfter: 2000,
+						textContent: event.textContent,
+					});
+				}
+				break;
+			}
+
 			default:
 			// noop.
 		}
 	}
 
+	console.log('steps', steps);
 	return steps;
 };

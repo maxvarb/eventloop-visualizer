@@ -65,6 +65,7 @@ export const useCodeRunner = ({
 	const runCode = () => {
 		iroh = new IrohRunner(editorRef.getValue());
 		eval(iroh.stage.script);
+		console.log(iroh.getQueue());
 		if (editorRef) {
 			document.addEventListener('keydown', keyboardListener);
 		}

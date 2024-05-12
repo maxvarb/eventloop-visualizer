@@ -23,7 +23,7 @@ export const EventsPanel = ({
 	}, [state]);
 
 	return (
-		<div className={cn('w-full h-full flex flex-col-reverse', className)}>
+		<div className={cn('w-full h-full flex', className)}>
 			{logs.map((log) => (
 				<div key={log}>
 					{RenderElement ? RenderElement : <div>{log}</div>}

@@ -1,6 +1,6 @@
 import { Iroh } from 'public/thirdparty/iroh.js';
 
-import { getSubstring, isEventConsoleLog } from '../utils';
+import { getSubstring } from '../utils';
 
 export class IrohRunner {
 	stage;
@@ -38,6 +38,7 @@ export class IrohRunner {
 	}
 
 	push(e, isIgnored = false) {
+		console.log('e.', getSubstring(this.#input, e.getLocation()));
 		this.#queue.push({
 			data: e,
 			textContent: getSubstring(this.#input, e.getLocation()),
