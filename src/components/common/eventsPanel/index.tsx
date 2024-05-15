@@ -1,18 +1,47 @@
 'use client';
 
+import { ReactNode, useMemo } from 'react';
+
+import { AnimatePresence, motion, Variants } from 'framer-motion';
+
 import { useAppSelector } from '@/lib/store/hooks';
 import { StateKey } from '@/lib/store/types';
 import { cn } from '@/lib/utils';
-import { ReactNode, useMemo } from 'react';
+
+type EventsPanelType = 'stack' | 'queue';
 
 interface EventsPanelProps {
 	entityName: StateKey;
+	type: EventsPanelType;
 	RenderElement?: ReactNode;
 	className?: string;
 }
 
+const variants: Variants = {
+	'hidden-stack': {
+		opacity: 0,
+		y: -350,
+	},
+	'hidden-queue': {
+		opacity: 0,
+		x: 450,
+	},
+	visible: {
+		opacity: 1,
+		y: 0,
+		x: 0,
+		transition: { duration: 0.3 },
+	},
+};
+
+const TYPE_TO_CLASSNAME: Record<EventsPanelType, string> = {
+	stack: 'flex-col-reverse',
+	queue: 'flex-row',
+};
+
 export const EventsPanel = ({
 	entityName,
+	type,
 	RenderElement,
 	className,
 }: EventsPanelProps) => {
@@ -23,12 +52,36 @@ export const EventsPanel = ({
 	}, [state]);
 
 	return (
-		<div className={cn('w-full h-full flex', className)}>
-			{logs.map((log) => (
-				<div key={log}>
-					{RenderElement ? RenderElement : <div>{log}</div>}
-				</div>
-			))}
+		<div
+			className={cn(
+				'w-full h-full flex gap-2',
+				TYPE_TO_CLASSNAME[type],
+				className
+			)}
+		>
+			<AnimatePresence>
+				{logs.map((log) => (
+					<motion.div
+						variants={variants}
+						initial={
+							type === 'stack' ? 'hidden-stack' : 'hidden-queue'
+						}
+						animate="visible"
+						exit={
+							type === 'stack' ? 'hidden-stack' : 'hidden-queue'
+						}
+						key={log}
+					>
+						{RenderElement ? (
+							RenderElement
+						) : (
+							<div className="w-full h-auto px-4 py-2 rounded-md bg-[#1e2327]">
+								{log}
+							</div>
+						)}
+					</motion.div>
+				))}
+			</AnimatePresence>
 		</div>
 	);
 };

@@ -43,7 +43,7 @@ export const BlockWrapper = forwardRef<HTMLDivElement, BlockWrapperProps>(
 				ref={ref}
 				className={cn(
 					className,
-					!noPadding && 'p-2.5',
+					!noPadding && 'pt-6 pb-2.5 px-2.5',
 					'relative rounded-lg bg-primary text-white shadow-3xl'
 				)}
 				variants={variants}

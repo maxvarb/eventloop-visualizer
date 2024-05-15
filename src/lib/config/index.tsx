@@ -18,10 +18,7 @@ export const BLOCKS = [
 			label: 'Call Stack',
 		},
 		component: (
-			<EventsPanel
-				entityName="callStack"
-				className="flex-col-reverse"
-			></EventsPanel>
+			<EventsPanel entityName="callStack" type="stack"></EventsPanel>
 		),
 	},
 	{
@@ -31,10 +28,7 @@ export const BLOCKS = [
 			label: 'Web APIs',
 		},
 		component: (
-			<EventsPanel
-				entityName="webApis"
-				className="flex-col-reverse"
-			></EventsPanel>
+			<EventsPanel entityName="webApis" type="stack"></EventsPanel>
 		),
 	},
 	{
@@ -52,10 +46,7 @@ export const BLOCKS = [
 			label: 'Microtasks Queue',
 		},
 		component: (
-			<EventsPanel
-				entityName="microtasks"
-				className="flex-row"
-			></EventsPanel>
+			<EventsPanel entityName="microtasks" type="queue"></EventsPanel>
 		),
 	},
 	{
@@ -65,10 +56,7 @@ export const BLOCKS = [
 			label: 'Macrotasks Queue',
 		},
 		component: (
-			<EventsPanel
-				entityName="macrotasks"
-				className="flex-row"
-			></EventsPanel>
+			<EventsPanel entityName="macrotasks" type="queue"></EventsPanel>
 		),
 	},
 ];

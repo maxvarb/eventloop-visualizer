@@ -27,7 +27,7 @@ export const useStepper = () => {
 					...actionPayloadContent,
 				})
 			);
-			await timer(step.delayAfter || 2000);
+			await timer(step.delayAfter ?? 2000);
 		}
 	};
 
