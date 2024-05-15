@@ -32,5 +32,5 @@ export interface Step {
 	initiator: StateKey;
 	action: 'push' | 'pop' | 'remove';
 	textContent?: string | number;
-	delayAfter: number;
+	delayAfter?: number;
 }

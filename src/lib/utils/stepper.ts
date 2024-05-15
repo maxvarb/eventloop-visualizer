@@ -1,15 +1,15 @@
+import { Dispatch, UnknownAction } from '@reduxjs/toolkit';
 import { v4 as uuid } from 'uuid';
+
+import { IrohRuntimeEvent, Step } from '@/types';
 
 import {
 	isEventConsoleLog,
 	isEventSetTimeout,
 	isEventStaticPromiseMethod,
 } from './iroh';
-
-import { IrohRuntimeEvent, Step } from '@/types';
 import { StateValue } from '../store/types';
 import { getSetTimoutDelay } from './code';
-import { Dispatch, UnknownAction } from '@reduxjs/toolkit';
 import { pushEntry, removeEntry } from '../store/observerSlice';
 
 export const createEventSteps = (
@@ -23,36 +23,7 @@ export const createEventSteps = (
 			case 2: {
 				// function call
 				if (isEventSetTimeout(event.data)) {
-					const setTimeoutId = uuid();
-					steps.push({
-						id: setTimeoutId,
-						initiator: 'webApis',
-						action: 'push',
-						textContent: event.textContent,
-						delayAfter: 2000,
-					});
-					const delay = getSetTimoutDelay(event.textContent);
-					setTimeout(
-						() => {
-							dispatch(
-								removeEntry({
-									type: 'webApis',
-									id: setTimeoutId,
-								})
-							);
-							dispatch(
-								pushEntry({
-									type: 'macrotasks',
-									content: {
-										id: uuid(),
-										textContent: event.textContent,
-									},
-								})
-							);
-						},
-						Math.max(delay, 2000)
-					);
-
+					createSetTimoutFlow(steps, event, dispatch);
 					break;
 				}
 				steps.push({
@@ -60,7 +31,6 @@ export const createEventSteps = (
 					initiator: 'callStack',
 					action: 'push',
 					textContent: event.textContent,
-					delayAfter: 2000,
 				});
 				if (isEventConsoleLog(event.data)) {
 					steps.push({
@@ -83,7 +53,6 @@ export const createEventSteps = (
 					id: uuid(),
 					initiator: 'callStack',
 					action: 'pop',
-					delayAfter: 2000,
 				});
 				break;
 			}
@@ -97,14 +66,12 @@ export const createEventSteps = (
 						id: functionOwner.id,
 						initiator: 'macrotasks',
 						action: 'remove',
-						delayAfter: 2000,
 					});
 					steps.push({
 						id: uuid(),
 						initiator: 'callStack',
 						action: 'push',
 						textContent: event.textContent,
-						delayAfter: 2000,
 					});
 				}
 			}
@@ -115,7 +82,6 @@ export const createEventSteps = (
 						id: uuid(),
 						initiator: 'microtasks',
 						action: 'push',
-						delayAfter: 2000,
 						textContent: event.textContent,
 					});
 				}
@@ -129,4 +95,39 @@ export const createEventSteps = (
 
 	console.log('steps', steps);
 	return steps;
+};
+
+const createSetTimoutFlow = (
+	steps: Step[],
+	event: IrohRuntimeEvent,
+	dispatch: Dispatch<UnknownAction>
+) => {
+	const setTimeoutId = uuid();
+	steps.push({
+		id: setTimeoutId,
+		initiator: 'webApis',
+		action: 'push',
+		textContent: event.textContent,
+	});
+	const delay = getSetTimoutDelay(event.textContent);
+	setTimeout(
+		() => {
+			dispatch(
+				removeEntry({
+					type: 'webApis',
+					id: setTimeoutId,
+				})
+			);
+			dispatch(
+				pushEntry({
+					type: 'macrotasks',
+					content: {
+						id: uuid(),
+						textContent: event.textContent,
+					},
+				})
+			);
+		},
+		Math.max(delay, 2000)
+	);
 };
