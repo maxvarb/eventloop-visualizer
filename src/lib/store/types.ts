@@ -11,7 +11,7 @@ export interface EventSourcePosition {
 
 export interface StateValue {
 	textContent: string;
-	id: number;
+	id: string;
 }
 
 export interface State {
@@ -35,7 +35,7 @@ export interface PushEntryActionPayload extends BaseActionPayload {
 export type PopEntryActionPayload = BaseActionPayload;
 
 export interface RemoveEntryActionPayload extends BaseActionPayload {
-	id: number;
+	id: string;
 }
 
 export type StoreMutationOperation = 'push' | 'pop' | 'remove';

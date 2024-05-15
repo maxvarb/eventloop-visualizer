@@ -14,3 +14,7 @@ export const isEventStaticPromiseMethod = (e: IrohRuntimeEventData) => {
 		e.object === Promise.reject
 	);
 };
+
+export const isEventSetTimeout = (e: IrohRuntimeEventData) => {
+	return e.name === 'setTimeout';
+};

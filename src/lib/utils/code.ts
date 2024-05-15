@@ -21,6 +21,12 @@ export const getSubstring = (
 	}
 };
 
+export const getSetTimoutDelay = (str: string): number => {
+	const lastCommaIndex = str.lastIndexOf(',');
+	const delay = str.substring(lastCommaIndex + 1, str.length - 1).trim();
+	return Number(delay);
+};
+
 // Promise.resolve(10).then(function(res) {
 //     console.log(res);
 // })

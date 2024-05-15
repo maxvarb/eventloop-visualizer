@@ -58,14 +58,13 @@ export const useCodeRunner = ({
 			elementsQueue.push(irohRuntimeEvent);
 			irohRuntimeEvent = getNextElement();
 		}
-
+		console.log('current queue', [...elementsQueue, irohRuntimeEvent]);
 		return [...elementsQueue, irohRuntimeEvent];
 	};
 
 	const runCode = () => {
 		iroh = new IrohRunner(editorRef.getValue());
 		eval(iroh.stage.script);
-		console.log(iroh.getQueue());
 		if (editorRef) {
 			document.addEventListener('keydown', keyboardListener);
 		}

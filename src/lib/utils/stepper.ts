@@ -1,17 +1,60 @@
 import { v4 as uuid } from 'uuid';
 
-import { isEventConsoleLog, isEventStaticPromiseMethod } from './iroh';
+import {
+	isEventConsoleLog,
+	isEventSetTimeout,
+	isEventStaticPromiseMethod,
+} from './iroh';
 
 import { IrohRuntimeEvent, Step } from '@/types';
+import { StateValue } from '../store/types';
+import { getSetTimoutDelay } from './code';
+import { Dispatch, UnknownAction } from '@reduxjs/toolkit';
+import { pushEntry, removeEntry } from '../store/observerSlice';
 
-export const createEventSteps = (events: IrohRuntimeEvent[]) => {
+export const createEventSteps = (
+	events: IrohRuntimeEvent[],
+	macrotasks: StateValue[],
+	dispatch: Dispatch<UnknownAction>
+) => {
 	const steps: Step[] = [];
 	for (const event of events) {
-		console.log('event', event);
-		console.log('location', event.data.getLocation());
 		switch (event.data.type) {
 			case 2: {
 				// function call
+				if (isEventSetTimeout(event.data)) {
+					const setTimeoutId = uuid();
+					steps.push({
+						id: setTimeoutId,
+						initiator: 'webApis',
+						action: 'push',
+						textContent: event.textContent,
+						delayAfter: 2000,
+					});
+					const delay = getSetTimoutDelay(event.textContent);
+					setTimeout(
+						() => {
+							dispatch(
+								removeEntry({
+									type: 'webApis',
+									id: setTimeoutId,
+								})
+							);
+							dispatch(
+								pushEntry({
+									type: 'macrotasks',
+									content: {
+										id: uuid(),
+										textContent: event.textContent,
+									},
+								})
+							);
+						},
+						Math.max(delay, 2000)
+					);
+
+					break;
+				}
 				steps.push({
 					id: uuid(),
 					initiator: 'callStack',
@@ -33,6 +76,9 @@ export const createEventSteps = (events: IrohRuntimeEvent[]) => {
 			}
 			case 3: {
 				// function return
+				if (isEventSetTimeout(event.data)) {
+					break;
+				}
 				steps.push({
 					id: uuid(),
 					initiator: 'callStack',
@@ -41,7 +87,27 @@ export const createEventSteps = (events: IrohRuntimeEvent[]) => {
 				});
 				break;
 			}
-
+			case 4: {
+				// function enter
+				const functionOwner = macrotasks.find((el) =>
+					el.textContent.includes(event.textContent)
+				);
+				if (functionOwner) {
+					steps.push({
+						id: functionOwner.id,
+						initiator: 'macrotasks',
+						action: 'remove',
+						delayAfter: 2000,
+					});
+					steps.push({
+						id: uuid(),
+						initiator: 'callStack',
+						action: 'push',
+						textContent: event.textContent,
+						delayAfter: 2000,
+					});
+				}
+			}
 			case 24: {
 				// OP_NEW
 				if (isEventStaticPromiseMethod(event.data)) {

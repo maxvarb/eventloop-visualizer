@@ -38,7 +38,6 @@ export class IrohRunner {
 	}
 
 	push(e, isIgnored = false) {
-		console.log('e.', getSubstring(this.#input, e.getLocation()));
 		this.#queue.push({
 			data: e,
 			textContent: getSubstring(this.#input, e.getLocation()),
@@ -100,9 +99,9 @@ export class IrohRunner {
 		this.stage
 			.addListener(Iroh.CALL)
 			.on('before', (e) => {
-				this.push(e);
+				this.push(e, true);
 			})
-			.on('after', (e) => this.push(e, true));
+			.on('after', (e) => this.push(e));
 
 		// function
 		this.stage

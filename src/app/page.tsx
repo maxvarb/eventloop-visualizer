@@ -29,7 +29,10 @@ export default function Home() {
 						className="col-span-2 row-span-3"
 						label="Web APIs"
 					>
-						2
+						<EventsPanel
+							entityName="webApis"
+							className="flex-col-reverse"
+						></EventsPanel>
 					</BlockWrapper>
 					<BlockWrapper
 						appearanceIndex={2}
@@ -53,7 +56,10 @@ export default function Home() {
 						className="col-span-4 row-span-1"
 						label="Macrotasks Queue"
 					>
-						5
+						<EventsPanel
+							entityName="macrotasks"
+							className="flex-row"
+						></EventsPanel>
 					</BlockWrapper>
 				</div>
 			</div>

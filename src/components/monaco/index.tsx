@@ -33,8 +33,11 @@ interface MonacoProps {
 const CODE = `const a = 5;
 console.log(23);
 function abc() {
-   console.log(321)
+	console.log(321)
 }
+setTimeout(function() {
+ 	console.log(345);
+}, 200)
 abc()`;
 
 export const Monaco = ({ onEditorLoad }: MonacoProps) => {
