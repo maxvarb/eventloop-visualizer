@@ -54,22 +54,18 @@ export const EventsPanel = ({
 	return (
 		<div
 			className={cn(
-				'w-full h-full flex gap-2',
+				'w-full h-full flex gap-2 scrollbar-thumb-rounded-full overflow-auto scrollbar-none',
 				TYPE_TO_CLASSNAME[type],
 				className
 			)}
 		>
-			<AnimatePresence>
+			<AnimatePresence initial={false}>
 				{logs.map((log) => (
 					<motion.div
 						variants={variants}
-						initial={
-							type === 'stack' ? 'hidden-stack' : 'hidden-queue'
-						}
+						initial={`hidden-${type}`}
 						animate="visible"
-						exit={
-							type === 'stack' ? 'hidden-stack' : 'hidden-queue'
-						}
+						exit={`hidden-${type}`}
 						key={log}
 					>
 						{RenderElement ? (
